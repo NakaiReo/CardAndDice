@@ -6,20 +6,20 @@ using TMPro;
 
 public class CharacterSelect : MonoBehaviour
 {
-	PlayerData playerData;
-	PlayerData.Param data;
+	PlayerData playerData; //プレイヤーのデータ
+	PlayerData.Param data; //プレイヤーのデータベース
 
-	[SerializeField] TextMeshProUGUI nameText;
-	[SerializeField] AnimatorManager animatorManager;
-
-	[Space(10)]
-	[SerializeField] TextMeshProUGUI loreText;
+	[SerializeField] TextMeshProUGUI nameText;        //職業の名前
+	[SerializeField] AnimatorManager animatorManager; //職業のanimator
 
 	[Space(10)]
-	[SerializeField] GameObject confirmPanel;
-	[SerializeField] TextMeshProUGUI confirmText;
+	[SerializeField] TextMeshProUGUI loreText; //説明文
 
-	int select = 0;
+	[Space(10)]
+	[SerializeField] GameObject confirmPanel;     //確定パネル
+	[SerializeField] TextMeshProUGUI confirmText; //確定テキスト
+
+	int select = 0; //現在選択しているインデックス
 
 	void Start()
 	{
@@ -34,14 +34,18 @@ public class CharacterSelect : MonoBehaviour
 		Redraw();
 	}
 
+	/// <summary>
+    /// 再描画
+    /// </summary>
 	void Redraw()
 	{
-		PlayerPrefs.SetInt("Character", select);
-		data = playerData.sheets[0].list[select];
+		PlayerPrefs.SetInt("Character", select);  //現在の職業を設定
+		data = playerData.sheets[0].list[select]; //プレイヤーのデータを取得
 
-		nameText.text = data.Name;
-		animatorManager.SpritePathChange = "Player/" + data.Path;
+		nameText.text = data.Name; //職業名を表示
+		animatorManager.SpritePathChange = "Player/" + data.Path; //アニメーションのパス
 
+		//説明文を描画
 		loreText.text = "<line-height=150%>◇ キャラクター情報 ◇\n<line-height=100%>";
 		loreText.text += data.Lore + "\n";
 		loreText.text += "\n";
@@ -56,6 +60,9 @@ public class CharacterSelect : MonoBehaviour
 		loreText.text += "会心率 : " + data.CRI + "\n";
 	}
 
+	/// <summary>
+    /// 選択を押された時の処理
+    /// </summary>
 	public void SelectButton()
 	{
 		SoundDirector.PlaySE("UI/Select");
@@ -65,6 +72,9 @@ public class CharacterSelect : MonoBehaviour
 		confirmText.text += "<size=100%>" + "でよろしいですか?";
 	}
 
+	/// <summary>
+    /// 確定を押したときの処理
+    /// </summary>
 	public void ConfirmButton()
 	{
 		SoundDirector.PlaySE("UI/Select");
@@ -72,12 +82,19 @@ public class CharacterSelect : MonoBehaviour
 		Fade.ins.FadeIn("Game", 1.5f);
 	}
 
+	/// <summary>
+    /// 戻るを押したときの処理
+    /// </summary>
 	public void BackButton()
 	{
 		SoundDirector.PlaySE("UI/Cancel");
 		confirmPanel.SetActive(false);
 	}
 
+	/// <summary>
+    /// 職業の選択の処理
+    /// </summary>
+    /// <param name="n">いくつずらすか</param>
 	public void SelectCount(int n)
 	{
 		SoundDirector.PlaySE("UI/Move");

@@ -26,6 +26,9 @@ public class EnemyStatus : MonoBehaviour
 	public int money;
 	public int exp;
 
+	/// <summary>
+    /// すべての状態を計算したのちのステータス
+    /// </summary>
 	public void ClacStatus()
 	{
 		defaultStatus.hp = status.hp;
@@ -35,6 +38,9 @@ public class EnemyStatus : MonoBehaviour
 		status.Add(defaultStatus);
 	}
 
+	/// <summary>
+    /// ステータスの再計算
+    /// </summary>
 	public void ResetStatus()
 	{
 		bufStatus.Clear();
@@ -42,23 +48,33 @@ public class EnemyStatus : MonoBehaviour
 		ClacStatus();
 	}
 
+	/// <summary>
+    /// Stageから敵をランダムに取得
+    /// </summary>
+    /// <param name="tier">ステージの難易度</param>
 	public void LoadDataTier(int tier)
 	{
-		enemyData = Resources.Load("EnemyDataBase") as EnemyData;
+		enemyData = Resources.Load("EnemyDataBase") as EnemyData; //すべての敵データを取得
 
+		//同じステージのデータを取得
 		List<EnemyData.Param> tierList = new List<EnemyData.Param>();
-
 		foreach(EnemyData.Param s in enemyData.sheets[0].list)
 		{
 			if (s.Tier != tier) continue;
 			tierList.Add(s);
 		}
 
+		//ランダムに選択
 		int id = tierList[Random.Range(0, tierList.Count)].ID;
 
+		//データを読み込む
 		LoadDataID(id);
 	}
 
+	/// <summary>
+    /// IDからデータを読み込む
+    /// </summary>
+    /// <param name="id">敵ID</param>
 	public void LoadDataID(int id)
 	{
 		Debug.Log("ID: " + id);

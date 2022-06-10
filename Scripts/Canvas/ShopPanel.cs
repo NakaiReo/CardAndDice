@@ -7,11 +7,14 @@ public class ShopPanel : MonoBehaviour
 {
 	[SerializeField]  public GameObject panel;
 	[SerializeField]  public GameObject productPanel;
-	[SerializeField] public TextMeshProUGUI haveMoneyText;
+	[SerializeField]  public TextMeshProUGUI haveMoneyText;
 	[SerializeField]  PlayerStatus.StatusTextSerializeField StatusTextSerializeField;
 	[SerializeField]  public GameObject finButton;
 	[HideInInspector] public bool isPush = false;
 
+	/// <summary>
+    /// 終了ボタン
+    /// </summary>
 	public void FinButton()
 	{
 		StartCoroutine(_PushButton());
@@ -26,11 +29,17 @@ public class ShopPanel : MonoBehaviour
 		yield break;
 	}
 
+	/// <summary>
+    /// 再描画
+    /// </summary>
 	public void Redraw()
 	{
 		haveMoneyText.text = "所持金 : " + GameDirector.GetPlayerStatus.money + "G";
 	}
 
+	/// <summary>
+    /// 現在のステータス
+    /// </summary>
 	public void StatusTextReload()
 	{
 		GameDirector.GetPlayerStatus.HaveCardRefresh();

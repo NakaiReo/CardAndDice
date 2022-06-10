@@ -7,17 +7,28 @@ using UnityEngine.Events;
 [CreateAssetMenu(fileName = "NewCardData",menuName = "NewCardData")]
 public class CardData : ScriptableObject
 {
+	/// <summary>
+    /// カードの種類
+    /// </summary>
 	public enum Type
 	{
 		Equipment,
 		Magic
 	}
+
+	/// <summary>
+    /// コストの種類
+    /// </summary>
 	public enum CostType
 	{
 		None,
 		Mana,
 		Cooldown
 	}
+
+	/// <summary>
+    /// どこで使用できるか
+    /// </summary>
 	public enum UseType
 	{
 		None,
@@ -25,35 +36,38 @@ public class CardData : ScriptableObject
 		Battle
 	}
 
-	public int id;
-	public int tier;
-	public Type type;
-	public CostType costType;
-	public UseType useType;
-	public new string name;
-	public string lore;
-	public Sprite image;
+	public int id; //CardID
+	public int tier; //レア度
+	public Type type; //カードの種類
+	public CostType costType; //カードのコスト
+	public UseType useType; //どこで使用できるか
+	public new string name; //カード名
+	public string lore; //カードの説明文
+	public Sprite image; //カードのアイコン
 
-	public int price;
-	public int manaCost;
-	public int cooldown;
-	public int useCount;
+	public int price; //値段
+	public int manaCost; //マナのコスト
+	public int cooldown; //クールダウン
+	public int useCount; //使用回数
 
-	public int nowCooldown;
-	public int useCountLeft;
+	public int nowCooldown; //つぎの使用可能まで
+	public int useCountLeft; //のこり使用回数
 
-	public StatusP status;
-	public float overDamageArea;
-	public float overDamageMultiple;
+	public StatusP status; //対象
+	public float overDamageArea; //クリティカル範囲
+	public float overDamageMultiple; //クリティカル倍率
 
-	public string cardEffect;
-	public float arg;
+	public string cardEffect; //カード効果
+	public float arg; //変数
 
 	public UnityEvent cardEvent;
 
 	public delegate void CardEffectMethod();
 	public CardEffectMethod cardEffectMethod;
 
+	/// <summary>
+    /// 使用時のコスト処理
+    /// </summary>
 	public void CardCost()
 	{
 		switch (costType)

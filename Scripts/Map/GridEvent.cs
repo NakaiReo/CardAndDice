@@ -7,25 +7,25 @@ using TMPro;
 
 public class GridEvent : MonoBehaviour
 {
-	[SerializeField] PlayerStatus playerStatus;
-	[SerializeField] Transform haveCardCanvas;
-	[SerializeField] BattleDirector battleDirector;
-	[SerializeField] CardEffects cardEffects;
-	[SerializeField] GameObject infoCanvas;
-	[SerializeField] GameObject player;
+	[SerializeField] PlayerStatus playerStatus; //プレイヤーのステータス
+	[SerializeField] Transform haveCardCanvas;  //プレイヤーの手札の保存先
+	[SerializeField] BattleDirector battleDirector; //戦闘の処理
+	[SerializeField] CardEffects cardEffects;       //カード効果
+	[SerializeField] GameObject infoCanvas; //情報のUI
+	[SerializeField] GameObject player;     //プレイヤー
 
 	[Space(10)]
-	[SerializeField] GameObject dumpPrefab;
-	[SerializeField] GameObject shopPrefab;
-	[SerializeField] GameObject battleCanvas;
+	[SerializeField] GameObject dumpPrefab;   //カードを捨てる時のUIコンテンツ
+	[SerializeField] GameObject shopPrefab;   //ショップのUIコンテンツ
+	[SerializeField] GameObject battleCanvas; //バトルのUIコンテンツ
 
 	[Space(10)]
-	[SerializeField] Transform playerRect;
-	[SerializeField] GameObject healText;
+	[SerializeField] Transform playerRect; //プレイヤーの位置
+	[SerializeField] GameObject healText;  //ヒール用のテキストオブジェクト
 
 	Vector3 cameraPos { get { return Camera.main.transform.position; } }
 
-	const float FadeInPosY = -12.0f;
+	const float FadeInPosY = -12.0f; //カードフェードアウト位置
 
 	public delegate void Method(float time);
 	public static IEnumerator UIAnimation(float time, float addTime, Method method)
@@ -67,12 +67,16 @@ public class GridEvent : MonoBehaviour
 	//	}
 	//}
 
+	//各イベントの呼び出し
 	public void DrawCard(int stage) => StartCoroutine(DrawCardIE(stage));
 	public void Shop() => StartCoroutine(ShopIE());
 	public void Battle(int stage) => StartCoroutine(BattleIE(stage));
 	public void Boss(Vector2Int pos) => StartCoroutine(BattleIE(100 + Map.ins.tileDatas[pos.y,pos.x].boss.bossID));
 	public void Heal() => StartCoroutine(HealIE());
 
+	/// <summary>
+    /// カードを引く処理
+    /// </summary>
 	IEnumerator DrawCardIE(int stage)
 	{
 		GameDirector.isEvent = true;
@@ -142,29 +146,34 @@ public class GridEvent : MonoBehaviour
 
 		CardScript.canView = true;
 
+		//カードを捨てる処理
 		yield return StartCoroutine(DumpCard());
-
 
 		GameDirector.isEvent = false;
 		CardScript.canView = true;
 		yield break;
 	}
 
+	/// <summary>
+    /// ショップの処理
+    /// </summary>
 	IEnumerator ShopIE()
 	{
 		GameDirector.isEvent = true;
 		CardScript.canView = false;
 		CardScript.ViewCardInfoDestory();
 
+		//職業が商人なら半額効果を付与
 		bool isSeel = (playerStatus.playerName == PlayerStatus.PlayerName.Merchant);
 
+		//ショップUIを設定
 		Transform shopPanel = Instantiate(shopPrefab).transform;
 		shopPanel.SetParent(haveCardCanvas, false);
-		
 		ShopPanel shopPanelScript = shopPanel.GetComponent<ShopPanel>();
 		Transform productPanel = shopPanelScript.productPanel.transform;
 		HorizontalLayoutGroup horizontal = productPanel.GetComponent<HorizontalLayoutGroup>();
 
+		//ショップの初期化
 		shopPanelScript.StatusTextReload();
 		shopPanelScript.Redraw();
 
@@ -186,6 +195,7 @@ public class GridEvent : MonoBehaviour
 			products[i].ViewUI(false);
 		}
 
+		//商品が購入可能か
 		foreach (ShopProduct card in products)
 		{
 			bool canBuy = card.cardScript.cardData.price <= playerStatus.money;
@@ -280,6 +290,8 @@ public class GridEvent : MonoBehaviour
 			haveCards.DOLocalMoveY(pos.y, time);
 		}));
 
+
+		//カードを捨てる処理
 		yield return StartCoroutine(DumpCard());
 
 		playerStatus.status.pos = playerStatus.transform.localPosition;
@@ -290,21 +302,25 @@ public class GridEvent : MonoBehaviour
 		yield break;
 	}
 
+	/// <summary>
+    /// 戦闘の処理
+    /// </summary>
 	IEnumerator BattleIE(int stage)
 	{
 		GameDirector.isEvent = true;
 		CardScript.canView = true;
 		CardScript.ViewCardInfoDestory();
 
-		playerStatus.nowScene = CardData.UseType.Battle;
+		playerStatus.nowScene = CardData.UseType.Battle; //プレイヤーの現在状況を戦闘状態へ
 
 		yield return new WaitForSeconds(0.5f);
 
+		//戦闘の種類ごとにならBGMを変更
 		if (stage <= 100) SoundDirector.PlayBGM("Battle");
 		else SoundDirector.PlayBGM("BossBattle");
 
+		//戦闘のUIを表示
 		Transform panelTransform = battleCanvas.transform.GetChild(0);
-
 		battleDirector.gameObject.SetActive(true);
 		battleDirector.Reset(stage);
 		panelTransform.localScale = new Vector3(0, 1, 1);
@@ -314,21 +330,26 @@ public class GridEvent : MonoBehaviour
 			panelTransform.DOScaleX(1, time);
 		}));
 
+		//戦闘が終わるまで待機
 		CardScript.canView = true;
 		yield return StartCoroutine(battleDirector.Battle());
 
+		//倒したのがボスなら倒れさせる
 		if (stage > 100) Map.ins.bossScripts[stage - 101].Die();
 
+		//戦闘のUIを非表示
 		yield return StartCoroutine(UIAnimation(0.25f, 0.5f, (time) =>
 		{
 			panelTransform.DOScaleX(0, time);
 		}));
 
+		//マップに戻す処理
 		playerStatus.nowScene = CardData.UseType.Map;
 		playerStatus.status.pos = player.transform.localPosition;
 		playerStatus.HaveCardRefresh();
 		if (stage > 100)
 		{
+			//最終戦だったら
 			if (Map.ins.bossScripts[stage - 101].lastBattle)
 			{
 				CardScript.ViewCardInfoDestory();
@@ -343,6 +364,9 @@ public class GridEvent : MonoBehaviour
 		yield break;
 	}
 
+	/// <summary>
+    /// 回復マスの処理
+    /// </summary>
 	IEnumerator HealIE()
 	{
 		GameDirector.isEvent = true;
@@ -351,7 +375,7 @@ public class GridEvent : MonoBehaviour
 
 		yield return new WaitForSeconds(1.00f);
 
-		playerStatus.ClacStatus();
+		playerStatus.ClacStatus(); //プレイヤーのステータスの再計算
 
 		Vector2 random = Vector2.zero;
 
@@ -374,7 +398,9 @@ public class GridEvent : MonoBehaviour
 	}
 
 
-
+	/// <summary>
+    /// カードデータベースからランダムにカードを選択
+    /// </summary>
 	CardData RandomCardData()
 	{
 		int random = Random.Range(0, CardDataDirector.ins.cardBaseData.CardList.Count);
@@ -383,6 +409,9 @@ public class GridEvent : MonoBehaviour
 		return cardData;
 	}
 
+	/// <summary>
+    /// カードを捨てる処理
+    /// </summary>
 	IEnumerator DumpCard()
 	{
 		CardScript.canView = true;
@@ -393,6 +422,7 @@ public class GridEvent : MonoBehaviour
 
 		float time;
 
+		//カードが5枚を超えたら捨てる処理を
 		while (playerStatus.haveCards.Count > 5)
 		{
 			int index = -1;
@@ -403,6 +433,7 @@ public class GridEvent : MonoBehaviour
 			dump.GetComponent<RectTransform>().DOScaleY(1, 0.25f);
 			playerStatus.HaveCardRefresh();
 
+			//捨てるカードの選択
 			while (true)
 			{
 				bool check = CardScript.isViewCard != null;
@@ -434,10 +465,11 @@ public class GridEvent : MonoBehaviour
 			haveCards.DOMoveY(cameraPos.y + FadeInPosY, time);
 			yield return new WaitForSeconds(time);
 
+			//選択したカードを削除する
 			playerStatus.DestoryHaveCard(index);
 			yield return null;
 
-			//選択したカードを削除して手札をもとの位置に戻す
+			//手札をもとの位置に戻す
 			time = 0.5f;
 			playerStatus.HaveCardRefresh();
 			haveCards.DOLocalMoveY(pos.y, time);

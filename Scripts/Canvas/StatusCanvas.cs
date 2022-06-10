@@ -22,6 +22,9 @@ public class StatusCanvas : MonoBehaviour
 		Swip(0.0f);
 	}
 
+	/// <summary>
+    /// 切り替えを押されたら
+    /// </summary>
 	public void PushButton()
 	{
 		Redraw();
@@ -29,6 +32,10 @@ public class StatusCanvas : MonoBehaviour
 		Swip(0.1f);
 	}
 
+	/// <summary>
+    /// 開く閉じるの切り替え
+    /// </summary>
+    /// <param name="time"></param>
 	void Swip(float time)
 	{
 		if (isOpen) StartCoroutine(OpenStatus(time));
@@ -38,6 +45,9 @@ public class StatusCanvas : MonoBehaviour
 		DirectionImage.DOScaleY(scaleY, 0.1f);
 	}
 
+	/// <summary>
+    /// 再描画
+    /// </summary>
 	public void Redraw()
 	{
 		StatusTextSerializeField.atk.text = GameDirector.GetPlayerStatus.StatusTextATK;
@@ -47,6 +57,9 @@ public class StatusCanvas : MonoBehaviour
 		StatusTextSerializeField.cri.text = GameDirector.GetPlayerStatus.StatusTextCRI;
 	}
 
+	/// <summary>
+    /// ステータスを開く
+    /// </summary>
 	IEnumerator OpenStatus(float time)
 	{
 		Redraw();
@@ -54,6 +67,10 @@ public class StatusCanvas : MonoBehaviour
 		rect.DOScaleY(1.0f, time);
 		yield break;
 	}
+
+	/// <summary>
+	/// ステータスを閉じる
+	/// </summary>
 	IEnumerator CloseStatus(float time)
 	{
 		rect.DOScaleY(0.0f, time);

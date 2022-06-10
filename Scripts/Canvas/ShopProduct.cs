@@ -15,6 +15,9 @@ public class ShopProduct : MonoBehaviour
 	public bool canBuy = false;
 	public bool isSeel = false;
 
+	/// <summary>
+    /// 初期化
+    /// </summary>
 	public void ResetUI()
 	{
 		priceText.text = "No Input";
@@ -23,6 +26,9 @@ public class ShopProduct : MonoBehaviour
 		isBuy = false;
 	}
 
+	/// <summary>
+    /// UIの有効化
+    /// </summary>
 	public void ViewUI(bool b, bool ib = false)
 	{
 		priceText.enabled = b;
@@ -30,6 +36,9 @@ public class ShopProduct : MonoBehaviour
 		buyButtonText.enabled = b;
 	}
 
+	/// <summary>
+    /// アニメーション
+    /// </summary>
 	public void ScaleAnim(float time)
 	{
 		priceText.transform.localScale = new Vector3(0, 1, 1);
@@ -40,6 +49,9 @@ public class ShopProduct : MonoBehaviour
 		cardScript.FlipCardAnimation(true, time);
 	}
 
+	/// <summary>
+    /// 購入ボタン
+    /// </summary>
 	public void PushBuyButton()
 	{
 		priceText.text = "---";

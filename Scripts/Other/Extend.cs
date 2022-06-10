@@ -76,6 +76,10 @@ public static class Extend
 		return n;
 	}
 
+	/// <summary>
+    /// ColorとColorのそれぞれの値を掛ける
+    /// </summary>
+    /// <returns>かけ合わせたColor</returns>
 	public static Color ColorMultiple(this Color a, Color b)
 	{
 		a.r = Mathf.Clamp(a.r * b.r, 0.0f, 1.0f);
@@ -86,12 +90,23 @@ public static class Extend
 		return a;
 	}
 
+	/// <summary>
+    /// Colorのアルファ値だけ書き換える
+    /// </summary>
+    /// <param name="color">元となるColor</param>
+    /// <param name="a">アルファ値</param>
+    /// <returns>変更後のColor</returns>
 	public static Color ColorA(this Color color, float a)
 	{
 		color.a = a;
 		return color;
 	}
 
+	/// <summary>
+    /// UI座標からWorld座標へ
+    /// </summary>
+    /// <param name="rect">UI座標</param>
+    /// <returns>World座標</returns>
 	public static Vector3 RectToWorld(this RectTransform rect)
 	{
 		Vector3 screenPos = RectTransformUtility.WorldToScreenPoint(Camera.main, rect.position);
@@ -101,6 +116,11 @@ public static class Extend
 		return result;
 	}
 
+	/// <summary>
+    /// 引数をデシベル変換する
+    /// </summary>
+    /// <param name="value">元の値(0.0001f - 1.0f)</param>
+    /// <returns>デシベル</returns>
 	public static float Value2decibel(this float value)
 	{
 		float v = Mathf.Clamp(value, 0.0001f, 1.0f);

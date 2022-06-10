@@ -5,9 +5,9 @@ using UnityEngine;
 
 public class TitleDirector : MonoBehaviour
 {
-	[SerializeField] Transform titleImage;
-	[SerializeField] Transform card1;
-	[SerializeField] Transform card2;
+	[SerializeField] Transform titleImage; //タイトルのイメージ
+	[SerializeField] Transform card1;      //カードの装飾1
+	[SerializeField] Transform card2;      //カードの装飾2
 
 	Sequence titleSeq;
 	Sequence card1Seq;
@@ -18,13 +18,14 @@ public class TitleDirector : MonoBehaviour
 		SoundDirector.PlayBGM("Title");
 		Fade.ins.FadeOut(1.5f);
 
-		float titleMoveValue = -50.0f;
-		float titleTime = 1.0f;
-		float titleSpan = 0.25f;
+		float titleMoveValue = -50.0f; //タイトルの移動量
+		float titleTime = 1.0f;        //移動にかかる時間
+		float titleSpan = 0.25f;       //移動の間隔
 
 		card1.GetComponent<CardScript>().cardData = CardDataDirector.ins.GetRandomCardData();
 		card2.GetComponent<CardScript>().cardData = CardDataDirector.ins.GetRandomCardData();
 
+		//タイトルのアニメーション
 		titleSeq = DOTween.Sequence();
 		titleSeq.Append(titleImage.DOLocalMoveY(titleImage.localPosition.y + titleMoveValue, titleTime));
 		titleSeq.AppendInterval(titleSpan);
@@ -38,9 +39,10 @@ public class TitleDirector : MonoBehaviour
 		CardScript card1Script = card1.GetComponent<CardScript>();
 		CardScript card2Script = card1.GetComponent<CardScript>();
 
-		float cardTime = 3.0f;
-		float cardSpan = 0.5f;
+		float cardTime = 3.0f; //拡大縮小にかかる時間
+		float cardSpan = 0.5f; //それらの待機時間
 
+		//カードの装飾1のアニメーション
 		card1Seq = DOTween.Sequence();
 		card1Seq.Append(card1.DOScale(card1.transform.localScale + cardMoveValue, 3f));
 		card1Seq.AppendInterval(cardSpan);
@@ -49,6 +51,7 @@ public class TitleDirector : MonoBehaviour
 		card1Seq.SetLoops(-1);
 		card1Seq.Pause();
 
+		//カードの装飾2のアニメーション
 		card2Seq = DOTween.Sequence();
 		card2Seq.Append(card2.DOScale(card2.transform.localScale + cardMoveValue, cardTime));
 		card2Seq.AppendInterval(cardSpan);

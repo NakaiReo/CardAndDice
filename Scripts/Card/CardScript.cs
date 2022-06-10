@@ -10,9 +10,12 @@ public class CardScript : MonoBehaviour
 	[SerializeField,Rename("カードID")] int cardID;
 	[SerializeField,Rename("カードの情報")] CardSerializeField cardSerializeField;
 
-	[HideInInspector] public int haveCardIndex;
-	[HideInInspector] public bool canUse;
+	[HideInInspector] public int haveCardIndex; //手札のインデックス
+	[HideInInspector] public bool canUse; //使用可能か
 
+	/// <summary>
+    /// カード情報
+    /// </summary>
 	public CardData cardData
 	{
 		get { return _cardData; }
@@ -24,7 +27,10 @@ public class CardScript : MonoBehaviour
 	}
 	CardData _cardData;
 
-public enum CardType
+	/// <summary>
+    /// このカードの状態
+    /// </summary>
+	public enum CardType
 	{
 		HaveCard,
 		ShopCard,
@@ -33,17 +39,21 @@ public enum CardType
 
 	[Rename("表示方法")] public CardType type;
 
+	//表向きか
 	public bool isFront { get { return _isFront; } private set { _isFront = value; } }
 	private bool _isFront = true;
 
+	//見ることができるか
 	public static bool canView;
 	public static CardScript isViewCard = null;
 
 	private void Start()
 	{
+		//カードの初期化
 		if (cardData == null) cardData = CardDataDirector.ins.cardBaseData.CardList[cardID];
 		CardColor();
 
+		//向きを変える
 		if (isFront) FlipFrontCard();
 		else FlipBackCard();
 
@@ -51,6 +61,9 @@ public enum CardType
 		//StartCoroutine("FlipFrontCardAnim");
 	}
 
+	/// <summary>
+    /// 表向きにする
+    /// </summary>
 	public void FlipFrontCard()
 	{
 		isFront = true;
@@ -58,6 +71,10 @@ public enum CardType
 		cardSerializeField.back.SetActive(false);
 		RedrawCard();
 	}
+
+	/// <summary>
+    /// 裏向きにする
+    /// </summary>
 	public void FlipBackCard()
 	{
 		isFront = false;
@@ -66,6 +83,9 @@ public enum CardType
 		RedrawCard();
 	}
 
+	/// <summary>
+    /// カードが押されたら
+    /// </summary>
 	public void ClickButton()
 	{
 		switch (type)
@@ -85,14 +105,22 @@ public enum CardType
 		}
 	}
 
+	/// <summary>
+    /// カード詳細を開く
+    /// </summary>
+    /// <param name="instanseTransform"></param>
 	void ViewCard(Transform instanseTransform)
 	{
+		//表示できなければ実行しない
 		if (canView == false) return;
+
+		//すでに表示されているものがあればそれを非表示に
 		if (isViewCard != null)
 		{
 			Destroy(isViewCard.gameObject);
 		}
 
+		//そのカードの詳細を表示
 		GameObject ins = Instantiate(this.gameObject);
 		ins.transform.SetParent(instanseTransform, false);
 
@@ -115,6 +143,9 @@ public enum CardType
 		isViewCard = insCardScript;
 	}
 
+	/// <summary>
+    /// 表示されている詳細を非表示に
+    /// </summary>
 	public static void ViewCardInfoDestory()
 	{
 		if (isViewCard != null)
@@ -123,11 +154,17 @@ public enum CardType
 		}
 	}
 
+	/// <summary>
+    /// カードの反転アニメーション
+    /// </summary>
 	public void FlipCardAnimation(bool front = true, float flipSpeed = 0.5f)
 	{
 		StartCoroutine(FlipCardAnim(front, flipSpeed));
 	}
 
+	/// <summary>
+	/// カードの反転アニメーション処理
+	/// </summary>
 	IEnumerator FlipCardAnim(bool front = true, float flipSpeed = 0.5f)
 	{
 		if (front) FlipBackCard(); else FlipFrontCard();
@@ -146,6 +183,9 @@ public enum CardType
 		yield break;
 	}
 
+	/// <summary>
+    /// カードの描画
+    /// </summary>
 	public void DrawCard()
 	{
 		string usePointString = "";
@@ -167,6 +207,9 @@ public enum CardType
 		cardSerializeField.cardImage.sprite = cardData.image;
 	}
 
+	/// <summary>
+    /// 使用できるかどうか
+    /// </summary>
 	public bool CanUseCheck(CardData.UseType nowArea)
 	{
 		bool breakB = true;
@@ -184,15 +227,18 @@ public enum CardType
 				break;
 		}
 
-		if (cardData.type == CardData.Type.Equipment) breakB = false;
-		if (areaCheck != true) breakB = false;
-		if (cardData.costType == CardData.CostType.Mana && GameDirector.GetPlayerStatus.status.mana < cardData.manaCost) breakB = false;
-		if (cardData.costType == CardData.CostType.Cooldown && cardData.nowCooldown > 0) breakB = false;
+		if (cardData.type == CardData.Type.Equipment) breakB = false; //装備品である
+		if (areaCheck != true) breakB = false; //エリアが違う
+		if (cardData.costType == CardData.CostType.Mana && GameDirector.GetPlayerStatus.status.mana < cardData.manaCost) breakB = false; //マナ足りない
+		if (cardData.costType == CardData.CostType.Cooldown && cardData.nowCooldown > 0) breakB = false; //クールダウンが終わってない
 
 		canUse = breakB;
 		return breakB;
 	}
 
+	/// <summary>
+    /// カードの再描画
+    /// </summary>
 	public void RedrawCard()
 	{
 		DrawCard();
@@ -233,6 +279,9 @@ public enum CardType
 		cardSerializeField.cantUseCard.SetActive(!canUse && isFront);
 	}
 
+	/// <summary>
+	/// カードの種類ごとに色をつける
+	/// </summary>
 	void CardColor()
 	{
 		Color color = new Color();

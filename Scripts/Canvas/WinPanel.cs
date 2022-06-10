@@ -25,6 +25,9 @@ public class WinPanel: MonoBehaviour
 	public int nextExp;
 	public int upLevel;
 
+	/// <summary>
+    /// 読み込み
+    /// </summary>
 	public void Load(int exp, int money, int nextExp, int upLevel)
 	{
 		player = GameDirector.GetPlayerStatus;
@@ -37,6 +40,9 @@ public class WinPanel: MonoBehaviour
 		Redraw();
 	}
 
+	/// <summary>
+    /// 再描画
+    /// </summary>
 	void Redraw()
 	{
 		getExpText.text = "獲得Exp : " + exp;
