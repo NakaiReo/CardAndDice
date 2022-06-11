@@ -4,7 +4,7 @@
 >制作人数: 1人<br>
 >製作期間: 2ヶ月<br>
 >制作時期: 2年次<br>
->開発環境:<br>
+>>#### 開発環境:<br>
 >>エンジン: Unity<br>
 >>言語: C#<br>
 >>ツール: Paint.net Excel<br>
@@ -25,9 +25,10 @@
 ステータスが上がるカード、これらを職業の性質に合わせて組み合わせることが大事である。<br>
 
 <br>
-[WebGL版のゲームを実行](https://saradabapepe.github.io/WebGL_CardAndDice/)
+### [WebGL版のゲームを実行](https://saradabapepe.github.io/WebGL_CardAndDice/)<br>
 <br>
 
+<br>
 ## 開発目的<br>
 学校の行事の一つである展示会等も近かったので、それに向けた制作である。
 展示会で出される作品はフラッシュゲームのような簡易なゲームが多いので、
@@ -50,7 +51,9 @@
 <br>
 
 ## スクリーンショット<br>
-[紹介動画 - Youtube](https://www.youtube.com/watch?v=WkhDCEypmUI)<br>
+<br>
+### [紹介動画 - Youtube](https://www.youtube.com/watch?v=WkhDCEypmUI)<br>
+<br>
 ![タイトル](ScreenShot/s1.png)
 ![職業選択](ScreenShot/s2.png)
 ![戦闘画面](ScreenShot/s3.png)
