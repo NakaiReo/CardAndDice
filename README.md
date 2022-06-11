@@ -25,7 +25,7 @@
 ステータスが上がるカード、これらを職業の性質に合わせて組み合わせることが大事である。<br>
 
 <br>
-### [WebGL版のゲームを実行](https://saradabapepe.github.io/WebGL_CardAndDice/)<br>
+[WebGL版のゲームを実行](https://saradabapepe.github.io/WebGL_CardAndDice/)<br>
 <br>
 
 <br>
