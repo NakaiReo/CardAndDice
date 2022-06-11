@@ -49,3 +49,4 @@
 ![職業選択](ScreenShot/s2.png)
 ![戦闘画面](ScreenShot/s3.png)
 ![マップ移動](ScreenShot/s4.png)
+![カードエディター](ScreenShot/s5.png)
