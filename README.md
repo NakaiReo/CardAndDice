@@ -22,7 +22,7 @@
 魔法はManaを消費して使うカード、道具は一定ターン後に再利用できるカード、装備は所持しているだけで
 ステータスが上がるカード、これらを職業の性質に合わせて組み合わせることが大事である。 
   
-### [WebGL版のゲームを実行](https://saradabapepe.github.io/WebGL_CardAndDice/)
+### [WebGL版のゲームを実行](https://nakaireo.github.io/WebGL_CardAndDice/)
   
 ## 開発目的  
 学校の行事の一つである展示会等も近かったので、それに向けた制作である。
